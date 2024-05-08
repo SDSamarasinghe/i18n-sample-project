@@ -1,24 +1,12 @@
-import React from "react";
-import { createRoot } from "react-dom/client";
+import React, { useEffect } from "react";
 import i18n from "i18next";
 import { useTranslation, initReactI18next } from "react-i18next";
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
-    // the translations
-    // (tip move them in a JSON file and import them,
-    // or even better, manage them via a UI: https://react.i18next.com/guides/multiple-translation-files#manage-your-translations-with-a-management-gui)
-    resources: {
-      en: {
-        translation: {
-          "Welcome to React": "Welcome to React and react-i18next",
-        },
-      },
-    },
     lng: "en", // if you're using a language detector, do not define the lng option
     fallbackLng: "en",
-
     interpolation: {
       escapeValue: false, // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
     },
@@ -27,11 +15,31 @@ i18n
 function App() {
   const { t } = useTranslation();
 
-  return <h2>{t("Welcome to React")}</h2>;
-}
+  useEffect(() => {
+    const languages = ["en", "nl"];
+    languages.forEach((lang) => {
+      fetch(`http://localhost:4001/api/labels/download/${lang}`)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          i18n.addResourceBundle(lang, "translation", data, true, true);
+        });
+    });
+  }, []);
 
-// append app to dom
-const root = createRoot(document.getElementById("root"));
-root.render(<App />);
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
+
+  return (
+    <div>
+      <h2>{t("Welcome to React")}</h2>
+      <button onClick={() => changeLanguage("nl")}>Switch to Dutch</button>
+      <button onClick={() => changeLanguage("en")}>Switch to English</button>
+
+    </div>
+  );
+}
 
 export default App;
