@@ -1,8 +1,6 @@
-import logo from "./logo.svg";
-import "./App.css";
 import React, { useState } from "react";
 
-function App() {
+function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -15,13 +13,7 @@ function App() {
   };
 
   return (
-    <div
-      className="Login"
-      style={{ marginLeft: "200px", alignContent: "center" }}
-    >
-      <br />
-      <br />
-      <h1>Login</h1>
+    <div className="Login">
       <form onSubmit={handleLogin}>
         <label>
           Username:
@@ -31,7 +23,6 @@ function App() {
             onChange={(e) => setUsername(e.target.value)}
           />
         </label>
-        <br />
         <label>
           Password:
           <input
@@ -40,11 +31,10 @@ function App() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
-        <br />
         <input type="submit" value="Login" />
       </form>
     </div>
   );
 }
 
-export default App;
+export default Login;
